@@ -215,4 +215,14 @@ public class NeuralNetwork implements Serializable
 	{
 		return layers[numberOfLayers-1].getOutputs();
 	}
+	
+	public int getOutputSize()
+	{
+		return layers[numberOfLayers-1].getNumberOfNeurons();
+	}
+	
+	public int getInputSize()
+	{
+		return layers[0].getNumberOfNeurons();
+	}
 }

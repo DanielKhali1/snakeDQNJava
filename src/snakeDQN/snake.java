@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 
-public class snake 
+public class Snake 
 {
 	
 	public int[][] gameGrid;
@@ -20,7 +20,7 @@ public class snake
 	
 	private boolean dead = false;
 	
-	public snake(int width, int height)
+	public Snake(int width, int height)
 	{
 		this.width = width;
 		this.height = height;
@@ -93,31 +93,29 @@ public class snake
 		double initialDistance = distanceFromFruit();
 		
 		
+		boolean didEat = didEatObjectiveItem();
+		
+		ateObjectiveItem();
+		CheckIfSnakeHitSelf();
+		
 
 		
-		boolean didEat = didEatObjectiveItem();
-        
-        ateObjectiveItem();
-        CheckIfSnakeHitSelf();
-        
+		changeDirection(changeDir);
+		move();
+		
+		double finalDistance = distanceFromFruit();
 
-        
-        changeDirection(changeDir);
-        move();
-        
-        double finalDistance = distanceFromFruit();
-
-        if(didEat)
+		if(didEat)
 		{
-			reward += 10;
+			reward += 1;
 		}
-		else if(Positions.get(0)[0] > width-1 || Positions.get(0)[0] < 0 || Positions.get(0)[1] > height-1 || Positions.get(0)[1] < 0 || dead)
+		else if(dead || Positions.get(0)[0] > width-1 || Positions.get(0)[0] < 0 || Positions.get(0)[1] > height-1 || Positions.get(0)[1] < 0)
 		{
-			reward -= 5;
+			reward -= 1;
 		}
 		else if(finalDistance > initialDistance)
 		{
-			reward += .5;
+			reward += .1;
 		}
 		else
 		{

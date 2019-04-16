@@ -55,4 +55,9 @@ public class Layer implements Serializable
 	{
 		return 1 / (1 + Math.exp(-x));
 	}
+	
+	public int getNumberOfNeurons()
+	{
+		return neurons.length;
+	}
 }

@@ -8,11 +8,11 @@ import DQN.NeuralNetwork;
 
 public class maib {
 	
-	public static double DISCOUNT_FACTOR = .99; //a
-	public static double learningFactor = .001;
+	public static double DISCOUNT_FACTOR = 0.995; //a
+	public static double learningFactor = 0.01;
 	public static double epsilon = 1;
 	public static double epsilonMin = 0.05;
-	public static double epsilonDecay = 0.999995;
+	public static double epsilonDecay = 0.99999;
 	private static Random random = new Random();
 	
 	//Q Value -> Q(state, action) = reward + discountFactor * sum of discountfactor^i*reward[i]
@@ -21,18 +21,16 @@ public class maib {
 	
 	public static void main(String[] args)
 	{
-		snake Snake = new snake(10,10);
+		Snake snake = new Snake(10,10);
 		
-		int[] topology = {Snake.width*Snake.height, 85, 50, 3};
-		NeuralNetwork network = new NeuralNetwork(topology, 0.001, 0);
-		
-		
-		for(int i = 0; i < 10000000; i++)
+		int[] topology = {snake.width*snake.height, 50, 50, 50, 3};
+		NeuralNetwork network = new NeuralNetwork(topology, learningFactor, 0);
+		for(int i = 0; i < 1000000; i++)
 		{
-			Snake = new snake(10, 10);
+			snake = new Snake(10, 10);
 			int step = 0;
 			
-			while(!Snake.isDead() && step < 1000)
+			while(!snake.isDead() && step < 1000)
 			{
 				
 				if(epsilon > epsilonMin)
@@ -41,7 +39,7 @@ public class maib {
 				}
 				
 				// get s from environment
-				double[] state = Snake.flattenedSnakeGrid();
+				double[] state = snake.flattenedSnakeGrid();
 				
 				// feed forward s as your networks input to get a list of q values as an output
 				double[] outputs = network.predict(state);
@@ -56,10 +54,10 @@ public class maib {
 				double qValue = outputs[actionIndex];
 				
 				// observe the reward r for that action
-				double reward = Snake.step(actions[actionIndex]);
+				double reward = snake.step(actions[actionIndex]);
 				
 				//record the new state s'
-				double[] statePrime = Snake.flattenedSnakeGrid();
+				double[] statePrime = snake.flattenedSnakeGrid();
 				
 				// feed forward s' as your networks input to get the list of q values as an output
 				double[] outputsPrime = network.predict(statePrime);
@@ -78,12 +76,15 @@ public class maib {
 				network.train(state, outputs, false);
 				//System.out.println(reward);
 				step++;
+				
+//				System.out.println(reward);
 			}
 			
-			System.out.println("episode " + i + " score: " +  Snake.score + " epsilon : " + epsilon);
+			if(snake.score > 1 || i % 10000 == 0)
+				System.out.println("episode " + i + " score: " +  snake.score + " epsilon : " + epsilon);
 		}
 		
-		snake finalGame = new snake(10, 10);
+		Snake finalGame = new Snake(10, 10);
 		
 		while(!finalGame.isDead())
 		{			
