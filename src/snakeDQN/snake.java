@@ -95,21 +95,23 @@ public class snake
 		
 
 		
-		ateObjectiveItem();
-		CheckIfSnakeHitSelf();
-		
+		boolean didEat = didEatObjectiveItem();
+        
+        ateObjectiveItem();
+        CheckIfSnakeHitSelf();
+        
 
-		
-		changeDirection(changeDir);
-		move();
-		
-		double finalDistance = distanceFromFruit();
+        
+        changeDirection(changeDir);
+        move();
+        
+        double finalDistance = distanceFromFruit();
 
-		if(didEatObjectiveItem())
+        if(didEat)
 		{
 			reward += 10;
 		}
-		else if(Positions.get(0)[0] > width-1 || Positions.get(0)[0] < 0 || Positions.get(0)[1] > height-1 || Positions.get(0)[1] < 0)
+		else if(Positions.get(0)[0] > width-1 || Positions.get(0)[0] < 0 || Positions.get(0)[1] > height-1 || Positions.get(0)[1] < 0 || dead)
 		{
 			reward -= 5;
 		}

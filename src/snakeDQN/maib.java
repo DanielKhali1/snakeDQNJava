@@ -12,7 +12,7 @@ public class maib {
 	public static double learningFactor = .001;
 	public static double epsilon = 1;
 	public static double epsilonMin = 0.05;
-	public static double epsilonDecay = 0.9999995;
+	public static double epsilonDecay = 0.999995;
 	private static Random random = new Random();
 	
 	//Q Value -> Q(state, action) = reward + discountFactor * sum of discountfactor^i*reward[i]
@@ -23,9 +23,11 @@ public class maib {
 	{
 		snake Snake = new snake(10,10);
 		
-		int[] topology = {Snake.width*Snake.height, 50, 30, 3};
-		NeuralNetwork network = new NeuralNetwork(topology, 0.2, 0.2);
-		for(int i = 0; i < 1000000; i++)
+		int[] topology = {Snake.width*Snake.height, 85, 50, 3};
+		NeuralNetwork network = new NeuralNetwork(topology, 0.001, 0);
+		
+		
+		for(int i = 0; i < 10000000; i++)
 		{
 			Snake = new snake(10, 10);
 			int step = 0;
@@ -49,7 +51,7 @@ public class maib {
 
 				
 				if(Math.random() < epsilon)
-					actionIndex = random.nextInt(2);
+					actionIndex = random.nextInt(3);
 				
 				double qValue = outputs[actionIndex];
 				
@@ -73,7 +75,7 @@ public class maib {
 				outputs[actionIndex] = qValue;
 				
 				//backpropagate with inputs and expected outputs
-				network.train(state, outputs, true);
+				network.train(state, outputs, false);
 				//System.out.println(reward);
 				step++;
 			}
@@ -94,7 +96,7 @@ public class maib {
 	
 	public static int getHighestNIndex(double[] outputs)
 	{
-		double highestQvalue = 0;
+		double highestQvalue = Double.MIN_VALUE;
 		int actionIndex = 0;
 		for(int i = 0; i < outputs.length; i++)
 		{
